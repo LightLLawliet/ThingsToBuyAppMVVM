@@ -23,6 +23,11 @@ class MainVewModel(
         }
     }
 
+    fun reset() {
+        repository.reset()
+        communication.put(UiState.ZeroDays)
+    }
+
     override fun observe(owner: LifecycleOwner, observer: Observer<UiState>) =
         communication.observe(owner, observer)
 }
