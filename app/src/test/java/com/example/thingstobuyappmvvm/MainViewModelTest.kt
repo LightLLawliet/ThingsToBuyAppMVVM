@@ -9,7 +9,7 @@ class MainViewModelTest {
 
     @Test
     fun `test 0 days`() {
-        val repository = FakeRepository(0)
+        val repository = FakeRepository.Base(0)
         val communication = FakeMainCommunication.Base()
         val viewModel = MainVewModel(repository, communication)
         viewModel.init(isFirstRun = true)
@@ -21,7 +21,7 @@ class MainViewModelTest {
 
     @Test
     fun `test N days`() {
-        val repository = FakeRepository(5)
+        val repository = FakeRepository.Base(5)
         val communication = FakeMainCommunication.Base()
         val viewModel = MainVewModel(repository, communication)
         viewModel.init(isFirstRun = true)
@@ -30,12 +30,40 @@ class MainViewModelTest {
         viewModel.init(isFirstRun = false)
         assertEquals(true, communication.checkCalledCount(1))
     }
+
+    @Test
+    fun `test reset`() {
+        val repository = FakeRepository.Base(5)
+        val communication = FakeMainCommunication.Base()
+        val viewModel = MainVewModel(repository, communication)
+        viewModel.init(isFirstRun = true)
+        assertEquals(true, communication.checkCalledCount(1))
+        assertEquals(true, communication.isTheSame(UiState.NDays(days = 5)))
+        viewModel.reset()
+        assertEquals(true, repository.resetCalledCount(2))
+        assertEquals(true, communication.checkCalledCount(2))
+        assertEquals(true, communication.isTheSame(UiState.ZeroDays))
+    }
 }
 
-private class FakeRepository(private val days: Int) : MainRepository {
+private interface FakeRepository : MainRepository {
 
-    override fun days(): Int = days
+    fun resetCalledCount(count: Int): Boolean
+
+    class Base(private val days: Int) : FakeRepository {
+
+        private var resetCalledCount = 0
+
+        override fun days(): Int = days
+
+        override fun reset() {
+            resetCalledCount++
+        }
+
+        override fun resetCalledCount(count: Int): Boolean = resetCalledCount == count
+    }
 }
+
 
 private interface FakeMainCommunication : MainCommunication.Mutable {
 
