@@ -47,7 +47,7 @@ private interface FakeMainCommunication : MainCommunication.Mutable {
         private lateinit var state: UiState
         private var callCount = 0
 
-        override fun isTheSame(uiState: UiState): Boolean = state.equals(uiState)
+        override fun isTheSame(uiState: UiState): Boolean = state == uiState
 
         override fun checkCalledCount(count: Int): Boolean = count == callCount
 

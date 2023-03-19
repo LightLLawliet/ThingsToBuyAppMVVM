@@ -1,5 +1,8 @@
 package com.example.thingstobuyappmvvm
 
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -49,11 +52,20 @@ interface MainCommunication {
 }
 
 sealed class UiState {
-    object ZeroDays : UiState() {
 
+    abstract fun apply(daysTextView: TextView, resetButton: Button)
+
+    object ZeroDays : UiState() {
+        override fun apply(daysTextView: TextView, resetButton: Button) {
+            daysTextView.text = "0"
+            resetButton.visibility = View.GONE
+        }
     }
 
     data class NDays(private val days: Int) : UiState() {
-
+        override fun apply(daysTextView: TextView, resetButton: Button) {
+            daysTextView.text = days.toString()
+            resetButton.visibility = View.VISIBLE
+        }
     }
 }
