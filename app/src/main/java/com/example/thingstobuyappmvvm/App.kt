@@ -2,6 +2,7 @@ package com.example.thingstobuyappmvvm
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.MutableLiveData
 
 class App : Application(), ProvideViewModel {
@@ -10,11 +11,10 @@ class App : Application(), ProvideViewModel {
 
     override fun onCreate() {
         super.onCreate()
+        val sharedPref = if (BuildConfig.DEBUG) SharedPref.Test() else SharedPref.Base()
         viewModel = MainVewModel(
             MainRepository.Base(
-                CacheDataSource.Base(
-                    getSharedPreferences("base", Context.MODE_PRIVATE),
-                ),
+                CacheDataSource.Base(sharedPref.make(this)),
                 Now.Base()
             ),
             MainCommunication.Base(MutableLiveData())
