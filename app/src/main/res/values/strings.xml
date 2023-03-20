@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ThingsToBuyAppMVVM</string>
+    <string name="reset">reset</string>
+    <string name="days">Days</string>
 </resources>
