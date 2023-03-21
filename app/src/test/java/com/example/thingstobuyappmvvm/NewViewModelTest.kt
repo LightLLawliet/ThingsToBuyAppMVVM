@@ -2,6 +2,10 @@ package com.example.thingstobuyappmvvm
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import com.example.thingstobuyappmvvm.domain.Card
+import com.example.thingstobuyappmvvm.domain.NewMainInteractor
+import com.example.thingstobuyappmvvm.presentation.NewMainCommunication
+import com.example.thingstobuyappmvvm.presentation.NewUiState
 import com.example.thingstobuyappmvvm.presentation.NewViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -68,13 +72,13 @@ class NewViewModelTest {
 
         interactor.canAddNewCard = true
 
-        viewModel.saveNewCard(text = "days without smoking", position = 0)
-        assertEquals("days without smoking", interactor.savedNewCardList[0])
+        viewModel.saveNewCard(text = "buy a book", position = 0)
+        assertEquals("buy a book", interactor.savedNewCardList[0])
         assertEquals(1, interactor.savedNewCardList.size)
         assertEquals(
             NewUiState.Replace(
                 position = 0,
-                card = Card.ZeroDays(text = "days without smoking", 4L)
+                card = Card.ZeroDays(text = "buy a book", 4L)
             ),
             communication.list[2]
         )
@@ -98,11 +102,11 @@ class NewViewModelTest {
         assertEquals(2, communication.list.size)
 
         interactor.canAddNewCard = false
-        viewModel.saveNewCard(text = "days without smoking", position = 0)
-        assertEquals("days without smoking", interactor.savedNewCardList[0])
+        viewModel.saveNewCard(text = "buy a book", position = 0)
+        assertEquals("buy a book", interactor.savedNewCardList[0])
         assertEquals(1, interactor.savedNewCardList.size)
         assertEquals(
-            NewUiState.Replace(position = 0, card = Card.ZeroDays(text = "days without smoking")),
+            NewUiState.Replace(position = 0, card = Card.ZeroDays(text = "buy a book")),
             communication.list[2]
         )
         assertEquals(3, communication.list.size)
@@ -114,12 +118,12 @@ class NewViewModelTest {
     fun `test edit zero days card and cancel`() {
         val communication = FakeCommunication()
         val interactor =
-            FakeInteractor(listOf(Card.ZeroDays(text = "days without smoking", id = 1L), Card.Add))
+            FakeInteractor(listOf(Card.ZeroDays(text = "buy a book", id = 1L), Card.Add))
         val viewModel = NewViewModel(communication, interactor)
         viewModel.init(isFirstRun = true)
 
         assertEquals(
-            NewUiState.Add(Card.ZeroDays(text = "days without smoking", id = 1L), Card.Add),
+            NewUiState.Add(Card.ZeroDays(text = "buy a book", id = 1L), Card.Add),
             communication.list[0]
         )
         assertEquals(1, communication.list.size)
@@ -128,7 +132,7 @@ class NewViewModelTest {
         assertEquals(
             NewUiState.Replace(
                 position = 0,
-                card = Card.ZeroDaysEdit(text = "days without smoking", id = 1L)
+                card = Card.ZeroDaysEdit(text = "buy a book", id = 1L)
             ),
             communication.list[1]
         )
@@ -138,7 +142,7 @@ class NewViewModelTest {
         assertEquals(
             NewUiState.Replace(
                 position = 0,
-                card = Card.ZeroDays(text = "days without smoking", id = 1L),
+                card = Card.ZeroDays(text = "buy a book", id = 1L),
                 Card.Add
             ),
             communication.list[2]
@@ -150,12 +154,12 @@ class NewViewModelTest {
     fun `test delete zero days card`() {
         val communication = FakeCommunication()
         val interactor =
-            FakeInteractor(listOf(Card.ZeroDays(text = "days without smoking", id = 1L), Card.Add))
+            FakeInteractor(listOf(Card.ZeroDays(text = "buy a book", id = 1L), Card.Add))
         val viewModel = NewViewModel(communication, interactor)
         viewModel.init(isFirstRun = true)
 
         assertEquals(
-            NewUiState.Add(Card.ZeroDays(text = "days without smoking", id = 1L), Card.Add),
+            NewUiState.Add(Card.ZeroDays(text = "buy a book", id = 1L), Card.Add),
             communication.list[0]
         )
         assertEquals(1, communication.list.size)
@@ -163,7 +167,7 @@ class NewViewModelTest {
         assertEquals(
             NewUiState.Replace(
                 position = 0,
-                card = Card.ZeroDaysEdit(text = "days without smoking", id = 1L)
+                card = Card.ZeroDaysEdit(text = "buy a book", id = 1L)
             ),
             communication.list[1]
         )
@@ -181,8 +185,8 @@ class NewViewModelTest {
         val interactor =
             FakeInteractor(
                 listOf(
-                    Card.ZeroDays(text = "days without smoking", id = 1L),
-                    (Card.ZeroDays(text = "days without alcohol", id = 2L))
+                    Card.ZeroDays(text = "buy a book", id = 1L),
+                    (Card.ZeroDays(text = "buy a phone", id = 2L))
                 )
             )
         val viewModel = NewViewModel(communication, interactor)
@@ -190,8 +194,8 @@ class NewViewModelTest {
 
         assertEquals(
             NewUiState.Add(
-                Card.ZeroDays(text = "days without smoking", id = 1L),
-                Card.ZeroDays(text = "days without smoking", id = 1L)
+                Card.ZeroDays(text = "buy a book", id = 1L),
+                Card.ZeroDays(text = "buy a book", id = 1L)
             ),
             communication.list[0]
         )
@@ -202,7 +206,7 @@ class NewViewModelTest {
         assertEquals(
             NewUiState.Replace(
                 position = 1,
-                card = Card.ZeroDaysEdit(text = "days without alcohol", id = 2L)
+                card = Card.ZeroDaysEdit(text = "buy a phone", id = 2L)
             ),
             communication.list[1]
         )
@@ -220,8 +224,8 @@ class NewViewModelTest {
         val interactor =
             FakeInteractor(
                 listOf(
-                    Card.ZeroDays(text = "days without smoking", id = 1L),
-                    (Card.ZeroDays(text = "days without alcohol", id = 2L))
+                    Card.ZeroDays(text = "buy a book", id = 1L),
+                    (Card.ZeroDays(text = "buy a phone", id = 2L))
                 )
             )
         val viewModel = NewViewModel(communication, interactor)
@@ -229,8 +233,8 @@ class NewViewModelTest {
 
         assertEquals(
             NewUiState.Add(
-                Card.ZeroDays(text = "days without smoking", id = 1L),
-                Card.ZeroDays(text = "days without smoking", id = 1L)
+                Card.ZeroDays(text = "buy a book", id = 1L),
+                Card.ZeroDays(text = "buy a book", id = 1L)
             ),
             communication.list[0]
         )
@@ -241,17 +245,17 @@ class NewViewModelTest {
         assertEquals(
             NewUiState.Replace(
                 position = 1,
-                card = Card.ZeroDaysEdit(text = "days without alcohol", id = 2L)
+                card = Card.ZeroDaysEdit(text = "buy a phone", id = 2L)
             ),
             communication.list[1]
         )
         assertEquals(2, communication.list.size)
 
-        viewModel.saveEditedZeroDaysCard(text = "days without vodka", position = 1)
+        viewModel.saveEditedZeroDaysCard(text = "buy a house", position = 1)
         assertEquals(
             NewUiState.Replace(
                 position = 1,
-                card = Card.ZeroDays(text = "days without vodka", id = 2L)
+                card = Card.ZeroDays(text = "buy a house", id = 2L)
             ),
             communication.list[2]
         )

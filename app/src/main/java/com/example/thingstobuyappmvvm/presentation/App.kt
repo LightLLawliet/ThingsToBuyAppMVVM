@@ -1,7 +1,6 @@
 package com.example.thingstobuyappmvvm.presentation
 
 import android.app.Application
-import androidx.lifecycle.MutableLiveData
 import com.example.thingstobuyappmvvm.BuildConfig
 
 class App : Application(), ProvideViewModel {
@@ -16,7 +15,7 @@ class App : Application(), ProvideViewModel {
                 CacheDataSource.Base(sharedPref.make(this)),
                 Now.Base()
             ),
-            MainCommunication.Base(MutableLiveData())
+            MainCommunication.Base()
         )
     }
 
