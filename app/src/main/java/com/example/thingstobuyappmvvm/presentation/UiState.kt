@@ -1,4 +1,4 @@
-package com.example.thingstobuyappmvvm
+package com.example.thingstobuyappmvvm.presentation
 
 import android.view.View
 import android.widget.Button

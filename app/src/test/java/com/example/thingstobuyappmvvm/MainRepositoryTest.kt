@@ -1,5 +1,8 @@
 package com.example.thingstobuyappmvvm
 
+import com.example.thingstobuyappmvvm.presentation.CacheDataSource
+import com.example.thingstobuyappmvvm.presentation.MainRepository
+import com.example.thingstobuyappmvvm.presentation.Now
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

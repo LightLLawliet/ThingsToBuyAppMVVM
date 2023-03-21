@@ -1,4 +1,4 @@
-package com.example.thingstobuyappmvvm
+package com.example.thingstobuyappmvvm.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

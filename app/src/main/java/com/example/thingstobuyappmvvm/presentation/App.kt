@@ -1,9 +1,8 @@
-package com.example.thingstobuyappmvvm
+package com.example.thingstobuyappmvvm.presentation
 
 import android.app.Application
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.lifecycle.MutableLiveData
+import com.example.thingstobuyappmvvm.BuildConfig
 
 class App : Application(), ProvideViewModel {
 

@@ -2,6 +2,10 @@ package com.example.thingstobuyappmvvm
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import com.example.thingstobuyappmvvm.presentation.MainCommunication
+import com.example.thingstobuyappmvvm.presentation.MainRepository
+import com.example.thingstobuyappmvvm.presentation.MainVewModel
+import com.example.thingstobuyappmvvm.presentation.UiState
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

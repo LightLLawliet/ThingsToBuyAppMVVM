@@ -1,4 +1,4 @@
-package com.example.thingstobuyappmvvm
+package com.example.thingstobuyappmvvm.presentation
 
 import android.content.SharedPreferences
 

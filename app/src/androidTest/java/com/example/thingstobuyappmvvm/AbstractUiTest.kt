@@ -4,6 +4,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.thingstobuyappmvvm.presentation.App
+import com.example.thingstobuyappmvvm.presentation.MainActivity
+import com.example.thingstobuyappmvvm.presentation.SharedPref
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
