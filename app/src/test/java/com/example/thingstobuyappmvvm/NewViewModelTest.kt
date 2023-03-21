@@ -13,7 +13,7 @@ class NewViewModelTest {
         val interactor = FakeInteractor(listOf(Card.Add))
         val viewModel = NewViewModel(communication, interactor)
         viewModel.init(isFirstRun = true)
-        assertEquals(NewUiState.Add(Card.Add), communication.list[0])
+        assertEquals(NewUiState.Add(card = Card.Add), communication.list[0])
         assertEquals(1, communication.list.size)
 
     }
@@ -28,7 +28,7 @@ class NewViewModelTest {
         assertEquals(1, communication.list.size)
 
         viewModel.addCard(position = 0)
-        assertEquals(NewUiState.Replace(position = 0, Card.Make), communication.list[1])
+        assertEquals(NewUiState.Replace(position = 0, card = Card.Make), communication.list[1])
         assertEquals(2, communication.list.size)
     }
 
@@ -43,11 +43,11 @@ class NewViewModelTest {
         assertEquals(1, communication.list.size)
 
         viewModel.addCard(position = 0)
-        assertEquals(NewUiState.Replace(position = 0, Card.Make), communication.list[1])
+        assertEquals(NewUiState.Replace(position = 0, card = Card.Make), communication.list[1])
         assertEquals(2, communication.list.size)
 
         viewModel.cancelMakingCard(position = 0)
-        assertEquals(NewUiState.Replace(position = 0, Card.Add), communication.list[2])
+        assertEquals(NewUiState.Replace(position = 0, card = Card.Add), communication.list[2])
         assertEquals(3, communication.list.size)
     }
 
@@ -61,19 +61,19 @@ class NewViewModelTest {
         assertEquals(1, communication.list.size)
 
         viewModel.addCard(position = 0)
-        assertEquals(NewUiState.Replace(position = 0, Card.Make), communication.list[1])
+        assertEquals(NewUiState.Replace(position = 0, card = Card.Make), communication.list[1])
         assertEquals(2, communication.list.size)
 
         interactor.canAddNewCard = true
 
         viewModel.saveNewCard(text = "days without smoking", position = 0)
+        assertEquals("days without smoking", interactor.savedNewCardList[0])
+        assertEquals(1, interactor.savedNewCardList.size)
         assertEquals(
-            NewUiState.Replace(
-                position = 0,
-                Card.ZeroDays(text = "days without smoking")
-            ),
-            communication.list[3]
+            NewUiState.Replace(position = 0, card = Card.ZeroDays(text = "days without smoking")),
+            communication.list[2]
         )
+        assertEquals(NewUiState.Add(Card.Add), communication.list[3])
         assertEquals(4, communication.list.size)
         assertEquals(1, interactor.canAddNewCardList)
         assertEquals(true, interactor.canAddNewCardList[0])
@@ -89,22 +89,125 @@ class NewViewModelTest {
         assertEquals(1, communication.list.size)
 
         viewModel.addCard(position = 0)
-        assertEquals(NewUiState.Replace(position = 0, Card.Make), communication.list[1])
+        assertEquals(NewUiState.Replace(position = 0, card = Card.Make), communication.list[1])
         assertEquals(2, communication.list.size)
 
         interactor.canAddNewCard = false
-
         viewModel.saveNewCard(text = "days without smoking", position = 0)
+        assertEquals("days without smoking", interactor.savedNewCardList[0])
+        assertEquals(1, interactor.savedNewCardList.size)
         assertEquals(
-            NewUiState.Replace(
-                position = 0,
-                Card.ZeroDays(text = "days without smoking")
-            ),
-            communication.list[3]
+            NewUiState.Replace(position = 0, card = Card.ZeroDays(text = "days without smoking")),
+            communication.list[2]
         )
         assertEquals(3, communication.list.size)
         assertEquals(1, interactor.canAddNewCardList)
         assertEquals(false, interactor.canAddNewCardList[0])
+    }
+
+    @Test
+    fun `test edit zero days card and cancel`() {
+        val communication = FakeCommunication()
+        val interactor =
+            FakeInteractor(listOf(Card.ZeroDays(text = "days without smoking", id = 1L), Card.Add))
+        val viewModel = NewViewModel(communication, interactor)
+        viewModel.init(isFirstRun = true)
+
+        assertEquals(
+            NewUiState.Add(Card.ZeroDays(text = "days without smoking", id = 1L), Card.Add),
+            communication.list[0]
+        )
+        assertEquals(1, communication.list.size)
+
+        viewModel.editZeroDaysCard(position = 0)
+        assertEquals(
+            NewUiState.Replace(
+                position = 0,
+                card = Card.ZeroDaysEdit(text = "days without smoking", id = 1L)
+            ),
+            communication.list[1]
+        )
+        assertEquals(2, communication.list.size)
+
+        viewModel.cancelEditZeroDaysCard(position = 0)
+        assertEquals(
+            NewUiState.Replace(
+                position = 0,
+                card = Card.ZeroDays(text = "days without smoking", id = 1L),
+                Card.Add
+            ),
+            communication.list[2]
+        )
+        assertEquals(3, communication.list.size)
+    }
+
+    @Test
+    fun `test delete zero days card`() {
+        val communication = FakeCommunication()
+        val interactor =
+            FakeInteractor(listOf(Card.ZeroDays(text = "days without smoking", id = 1L), Card.Add))
+        val viewModel = NewViewModel(communication, interactor)
+        viewModel.init(isFirstRun = true)
+
+        assertEquals(
+            NewUiState.Add(Card.ZeroDays(text = "days without smoking", id = 1L), Card.Add),
+            communication.list[0]
+        )
+        assertEquals(1, communication.list.size)
+        viewModel.editZeroDaysCard(position = 0)
+        assertEquals(
+            NewUiState.Replace(
+                position = 0,
+                card = Card.ZeroDaysEdit(text = "days without smoking", id = 1L)
+            ),
+            communication.list[1]
+        )
+        assertEquals(2, communication.list.size)
+
+        viewModel.deleteCard(position = 0)
+
+        assertEquals(NewUiState.Remove(position = 0), communication.list[2])
+        assertEquals(3, communication.list.size)
+    }
+
+    @Test
+    fun `test delete zero days card when add card not present`() {
+        val communication = FakeCommunication()
+        val interactor =
+            FakeInteractor(
+                listOf(
+                    Card.ZeroDays(text = "days without smoking", id = 1L),
+                    (Card.ZeroDays(text = "days without alcohol", id = 2L))
+                )
+            )
+        val viewModel = NewViewModel(communication, interactor)
+        viewModel.init(isFirstRun = true)
+
+        assertEquals(
+            NewUiState.Add(
+                Card.ZeroDays(text = "days without smoking", id = 1L),
+                Card.ZeroDays(text = "days without smoking", id = 1L)
+            ),
+            communication.list[0]
+        )
+        assertEquals(1, communication.list.size)
+
+
+        viewModel.editZeroDaysCard(position = 0)
+        assertEquals(
+            NewUiState.Replace(
+                position = 1,
+                card = Card.ZeroDaysEdit(text = "days without alcohol", id = 2L)
+            ),
+            communication.list[1]
+        )
+        assertEquals(2, communication.list.size)
+
+        viewModel.deleteCard(position = 1)
+        assertEquals(
+            NewUiState.Replace(position = 1, card = Card.Add), communication.list[2]
+        )
+        assertEquals(3, communication.list.size)
     }
 }
 
@@ -121,6 +224,11 @@ private class FakeInteractor(private val cards: List<Card>) : NewMainInteractor(
         canAddNewCardList.add(canAddNewCard)
         return canAddNewCard
     }
+
+    var savedNewCardList = mutableListOf<String>()
+    override fun saveNewCard(text: String) {
+        savedNewCardList.add(text)
+    }
 }
 
 private class FakeCommunication : NewMainCommunication {
@@ -132,4 +240,10 @@ private class FakeCommunication : NewMainCommunication {
     }
 
     override fun observe(owner: LifecycleOwner, observer: Observer<NewUiState>) = Unit
+}
+
+class VarargClass(private vararg val cards: String)
+
+fun main() {
+    VarargClass("a", "b")
 }
