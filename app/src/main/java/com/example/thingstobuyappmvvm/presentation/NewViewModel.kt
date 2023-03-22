@@ -35,9 +35,36 @@ class NewViewModel(
     override fun editZeroDaysCard(position: Int, card: Card.ZeroDays) {
         communication.put(NewUiState.Replace(position, card.toEditable()))
     }
+
+    override fun cancelEditZeroDaysCard(position: Int, card: Card.ZeroDaysEdit) {
+        communication.put(NewUiState.Replace(position, card.toNonEditable()))
+    }
+
+    override fun deleteCard(position: Int, id: Long) {
+        val canAddNewCard = interactor.canAddNewCard()
+        interactor.deleteCard(id)
+        communication.put(NewUiState.Remove(position))
+        if (!canAddNewCard)
+            communication.put(NewUiState.Add(Card.Add))
+    }
+
+    override fun saveEditedZeroDaysCard(text: String, position: Int, id: Long) {
+        interactor.updateCard(id, text)
+        communication.put(NewUiState.Replace(position, Card.ZeroDays(text, id)))
+    }
+
+    override fun editNonZeroDaysCard(position: Int, card: Card.NonZeroDays) {
+        communication.put(NewUiState.Replace(position, card.toEditable()))
+    }
+
+    override fun cancelEditNonZeroDaysCard(position: Int, card: Card.NonZeroDaysEdit) {
+        communication.put(NewUiState.Replace(position, card.toNonEditable()))
+    }
 }
 
-interface NewViewModelAction : AddCard, CancelMakeCard, SaveNewCard, EditZeroDaysCard
+interface NewViewModelAction : AddCard, CancelMakeCard, SaveNewCard, EditZeroDaysCard,
+    CancelEditZeroDaysCard, DeleteCard, SaveEditedZeroDaysCard, EditNonZeroDaysCard,
+    CancelEditNonZeroDaysCard
 
 interface AddCard {
     fun addCard(position: Int)
@@ -56,4 +83,25 @@ interface SaveNewCard {
 interface EditZeroDaysCard {
 
     fun editZeroDaysCard(position: Int, card: Card.ZeroDays)
+}
+
+interface CancelEditZeroDaysCard {
+    fun cancelEditZeroDaysCard(position: Int, card: Card.ZeroDaysEdit)
+}
+
+interface DeleteCard {
+
+    fun deleteCard(position: Int, id: Long)
+}
+
+interface SaveEditedZeroDaysCard {
+    fun saveEditedZeroDaysCard(text: String, position: Int, id: Long)
+}
+
+interface EditNonZeroDaysCard {
+    fun editNonZeroDaysCard(position: Int, card: Card.NonZeroDays)
+}
+
+interface CancelEditNonZeroDaysCard {
+    fun cancelEditNonZeroDaysCard(position: Int, card: Card.NonZeroDaysEdit)
 }

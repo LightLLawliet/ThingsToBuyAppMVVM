@@ -10,5 +10,22 @@ sealed class Card {
         fun toEditable() = ZeroDaysEdit(text, id)
     }
 
-    data class ZeroDaysEdit(private val text: String, private val id: Long) : Card()
+    data class ZeroDaysEdit(private val text: String, private val id: Long) : Card() {
+
+        fun toNonEditable() = ZeroDays(text, id)
+    }
+
+    data class NonZeroDays(private val days: Int, private val text: String, private val id: Long) :
+        Card() {
+        fun toEditable() = NonZeroDaysEdit(days, text, id)
+    }
+
+    data class NonZeroDaysEdit(
+        private val days: Int,
+        private val text: String,
+        private val id: Long
+    ) : Card() {
+
+        fun toNonEditable() = NonZeroDays(days, text, id)
+    }
 }

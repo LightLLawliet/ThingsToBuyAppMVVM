@@ -136,7 +136,10 @@ class NewViewModelTest {
         )
         assertEquals(1, communication.list.size)
 
-        viewModel.editZeroDaysCard(position = 0)
+        viewModel.editZeroDaysCard(
+            position = 0,
+            card = Card.ZeroDays(text = "buy a book", id = 1L)
+        )
         assertEquals(
             NewUiState.Replace(
                 position = 0,
@@ -151,7 +154,6 @@ class NewViewModelTest {
             NewUiState.Replace(
                 position = 0,
                 card = Card.ZeroDays(text = "buy a book", id = 1L),
-                Card.Add
             ),
             communication.list[2]
         )
@@ -167,11 +169,14 @@ class NewViewModelTest {
         viewModel.init(isFirstRun = true)
 
         assertEquals(
-            NewUiState.Add(Card.ZeroDays(text = "buy a book", id = 1L), Card.Add),
+            NewUiState.AddAll(listOf(Card.ZeroDays(text = "buy a book", id = 1L), Card.Add)),
             communication.list[0]
         )
         assertEquals(1, communication.list.size)
-        viewModel.editZeroDaysCard(position = 0)
+        viewModel.editZeroDaysCard(
+            position = 0,
+            card = Card.ZeroDays(text = "buy a book", id = 1L)
+        )
         assertEquals(
             NewUiState.Replace(
                 position = 0,
@@ -181,7 +186,7 @@ class NewViewModelTest {
         )
         assertEquals(2, communication.list.size)
 
-        viewModel.deleteCard(position = 0)
+        viewModel.deleteCard(position = 0, id = 1L)
 
         assertEquals(NewUiState.Remove(position = 0), communication.list[2])
         assertEquals(3, communication.list.size)
@@ -201,16 +206,21 @@ class NewViewModelTest {
         viewModel.init(isFirstRun = true)
 
         assertEquals(
-            NewUiState.Add(
-                Card.ZeroDays(text = "buy a book", id = 1L),
-                Card.ZeroDays(text = "buy a book", id = 1L)
+            NewUiState.AddAll(
+                listOf(
+                    Card.ZeroDays(text = "buy a book", id = 1L),
+                    Card.ZeroDays(text = "buy a book", id = 1L)
+                )
             ),
             communication.list[0]
         )
         assertEquals(1, communication.list.size)
 
 
-        viewModel.editZeroDaysCard(position = 1)
+        viewModel.editZeroDaysCard(
+            position = 1,
+            card = Card.ZeroDays(text = "buy a book", id = 1L)
+        )
         assertEquals(
             NewUiState.Replace(
                 position = 1,
@@ -220,7 +230,7 @@ class NewViewModelTest {
         )
         assertEquals(2, communication.list.size)
 
-        viewModel.deleteCard(position = 1)
+        viewModel.deleteCard(position = 1, id = 2L)
         assertEquals(NewUiState.Remove(position = 1), communication.list[2])
         assertEquals(NewUiState.Add(Card.Add), communication.list[3])
         assertEquals(4, communication.list.size)
