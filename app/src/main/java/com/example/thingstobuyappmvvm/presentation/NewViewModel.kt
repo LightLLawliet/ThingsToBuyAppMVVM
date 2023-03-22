@@ -60,11 +60,21 @@ class NewViewModel(
     override fun cancelEditNonZeroDaysCard(position: Int, card: Card.NonZeroDaysEdit) {
         communication.put(NewUiState.Replace(position, card.toNonEditable()))
     }
+
+    override fun saveEditedNonZeroDaysCard(days: Int, text: String, position: Int, id: Long) {
+        interactor.updateCard(id, text)
+        communication.put(NewUiState.Replace(position, Card.NonZeroDays(days, text, id)))
+    }
+
+    override fun resetNonZeroDaysCard(position: Int, card: Card.NonZeroDaysEdit) {
+        card.reset(interactor)
+        communication.put(NewUiState.Replace(position, card.toZeroDays()))
+    }
 }
 
 interface NewViewModelAction : AddCard, CancelMakeCard, SaveNewCard, EditZeroDaysCard,
     CancelEditZeroDaysCard, DeleteCard, SaveEditedZeroDaysCard, EditNonZeroDaysCard,
-    CancelEditNonZeroDaysCard
+    CancelEditNonZeroDaysCard, SaveEditedNonZeroDaysCard, ResetNonZeroDaysCard
 
 interface AddCard {
     fun addCard(position: Int)
@@ -104,4 +114,12 @@ interface EditNonZeroDaysCard {
 
 interface CancelEditNonZeroDaysCard {
     fun cancelEditNonZeroDaysCard(position: Int, card: Card.NonZeroDaysEdit)
+}
+
+interface SaveEditedNonZeroDaysCard {
+    fun saveEditedNonZeroDaysCard(days: Int, text: String, position: Int, id: Long)
+}
+
+interface ResetNonZeroDaysCard {
+    fun resetNonZeroDaysCard(position: Int, card: Card.NonZeroDaysEdit)
 }

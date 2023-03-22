@@ -26,6 +26,10 @@ sealed class Card {
         private val id: Long
     ) : Card() {
 
+        fun reset(interactor: NewMainInteractor) = interactor.resetCard(id)
+
         fun toNonEditable() = NonZeroDays(days, text, id)
+
+        fun toZeroDays() = Card.ZeroDays(text, id)
     }
 }
