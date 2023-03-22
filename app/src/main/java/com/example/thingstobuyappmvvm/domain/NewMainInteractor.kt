@@ -8,7 +8,7 @@ interface NewMainInteractor {
 
     fun canAddNewCard(): Boolean
 
-    fun newCard(text: String): CardView
+    fun newCard(text: String): Card
 
     fun deleteCard(id: Long)
 
