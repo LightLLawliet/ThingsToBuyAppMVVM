@@ -1,6 +1,7 @@
 package com.example.thingstobuyappmvvm.presentation
 
 import com.example.thingstobuyappmvvm.core.Communication
+import com.example.thingstobuyappmvvm.core.SingleLiveEvent
 
 interface NewMainCommunication {
 
@@ -10,5 +11,5 @@ interface NewMainCommunication {
 
     interface Mutable : Put, Observe
 
-    class Base : Communication.Abstract<NewUiState>(), Mutable
+    class Base : Communication.Abstract<NewUiState>(SingleLiveEvent()), Mutable
 }

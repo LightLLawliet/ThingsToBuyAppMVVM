@@ -301,6 +301,18 @@ private class FakeInteractor(private val cards: List<Card>) : NewMainInteractor(
         savedNewCardList.add(text)
         return Card.ZeroDays(text = text, id = 4L)
     }
+
+    override fun deleteCard(id: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateCard(id: Long, newText: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun resetCard(id: Long) {
+        TODO("Not yet implemented")
+    }
 }
 
 private class FakeCommunication : NewMainCommunication.Mutable {
