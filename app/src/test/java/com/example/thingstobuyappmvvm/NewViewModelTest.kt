@@ -285,12 +285,12 @@ private class FakeInteractor(private val cards: List<Card>) : NewMainInteractor(
     }
 }
 
-private class FakeCommunication : NewMainCommunication {
+private class FakeCommunication : NewMainCommunication.Mutable {
 
     val list = mutableListOf<NewUiState>()
 
-    override fun put(newUiState: NewUiState) {
-        list.add(newUiState)
+    override fun put(value: NewUiState) {
+        list.add(value)
     }
 
     override fun observe(owner: LifecycleOwner, observer: Observer<NewUiState>) = Unit

@@ -4,7 +4,7 @@ import com.example.thingstobuyappmvvm.domain.Card
 
 sealed class NewUiState {
 
-    class Add(private vararg val args: Card) : NewUiState() {
+    data class Add(private val args: Card) : NewUiState() {
 
     }
 }
